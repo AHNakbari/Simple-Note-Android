@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    card_view:cardCornerRadius="32dp"
+    card_view:cardElevation="3dp"
+    card_view:cardBackgroundColor="#FFF9DB">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:minHeight="120dp">
+
+        <TextView
+            android:id="@+id/noteTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="New Product Idea Design"
+            android:textColor="#231942"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noteContent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Create a mobile app UI Kit that provides a basic notes functionality but with some improvement.\n\nThere will be a choice to select what kind of notes that user needed, so the experience while taking notes can be unique based on the needs."
+            android:textColor="#666666"
+            android:textSize="12sp"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:lineSpacingExtra="2dp"/>
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/noteImage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:scaleX="0.2"
+        android:scaleY="0.2"
+        android:src="@drawable/pin96"
+        android:layout_gravity="end"
+        android:translationX="25dp"
+        android:translationY="-25dp"
+        android:visibility="invisible"
+        />
+</androidx.cardview.widget.CardView> 
