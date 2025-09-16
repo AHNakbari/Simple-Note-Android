@@ -1,27 +1,28 @@
-package com.example.simplenote
+package com.example.simplenote.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.core.widget.doAfterTextChanged
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
-import com.example.simplenote.SignUpActivity
-import com.example.simplenote.core.util.showError
-import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import org.json.JSONObject
+import okhttp3.Call
+import okhttp3.Callback
 import java.io.IOException
+import android.util.Log
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import androidx.core.content.edit
+import com.example.simplenote.BuildConfig
+import com.example.simplenote.R
+import org.json.JSONObject
+import com.example.simplenote.core.util.showError
 
 class SignInActivity : AppCompatActivity() {
 
@@ -112,9 +113,7 @@ class SignInActivity : AppCompatActivity() {
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     showError(this@SignInActivity, e.message ?: "Network error")
-                    runOnUiThread {
-                        loginButton.isEnabled = true
-                    }
+                    runOnUiThread { loginButton.isEnabled = true }
                 }
 
                 override fun onResponse(call: Call, response: Response) {
@@ -124,17 +123,18 @@ class SignInActivity : AppCompatActivity() {
                         val errorBody = response.body?.string()
                         val errorMsg = try {
                             var ret = ""
-                            for (i in 0 until JSONObject(errorBody).getJSONArray("errors").length()) {
-                                ret += "${JSONObject(errorBody).getJSONArray("errors").getJSONObject(i).getString("detail")}\n"
-                            }
-                            ret
+                            val arr = JSONObject(errorBody).optJSONArray("errors")
+                            if (arr != null) {
+                                for (i in 0 until arr.length()) {
+                                    ret += "${arr.getJSONObject(i).optString("detail")}\n"
+                                }
+                                ret
+                            } else errorBody ?: "Unknown error"
                         } catch (e: Exception) {
                             errorBody ?: "Unknown error"
                         }
                         showError(this@SignInActivity, errorMsg)
-                        runOnUiThread {
-                            loginButton.isEnabled = true
-                        }
+                        runOnUiThread { loginButton.isEnabled = true }
                     }
                 }
             })
@@ -170,14 +170,14 @@ class SignInActivity : AppCompatActivity() {
 
             sharedPreferences.edit {
                 putString("access_token", accessToken)
-                    .putString("refresh_token", refreshToken)
+                putString("refresh_token", refreshToken)
             }
 
             val client = OkHttpClient()
             val request = Request.Builder()
                 .url("${BuildConfig.BASE_URL}/api/auth/userinfo/")
                 .addHeader("Accept", "application/json")
-                .addHeader("Authorization", "Bearer ${accessToken}")
+                .addHeader("Authorization", "Bearer $accessToken")
                 .build()
             client.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -188,12 +188,14 @@ class SignInActivity : AppCompatActivity() {
                 override fun onResponse(call: Call, response: Response) {
                     if (response.code == 200) {
                         val jsonResponse = response.body!!.string()
-                        val jsonObject = JSONObject(jsonResponse)
-
+                        val jo = JSONObject(jsonResponse)
                         sharedPreferences.edit {
-                            putString("username", jsonObject.getString("username"))
-                                .putString("email", jsonObject.getString("email"))
-                                .putInt("id", jsonObject.getInt("id"))
+                            putString("username", jo.getString("username"))
+                            putString("email", jo.getString("email"))
+                            putInt("id", jo.getInt("id"))
+                            if (jo.has("sex") && !jo.isNull("sex")) {
+                                putString("sex", jo.getString("sex"))
+                            }
                         }
                     }
                 }

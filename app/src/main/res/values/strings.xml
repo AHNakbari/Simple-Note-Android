@@ -11,12 +11,11 @@
     <string name="login">Login</string>
     <string name="or">Or</string>
     <string name="don_t_have_any_account_register_here">Don’t have any account? Register here</string>
-    <string name="let_s_login">Let\'s Login</string>
+    <string name="let_s_login">Let&apos;s Login</string>
     <string name="and_notes_your_idea">And notes your idea</string>
     <string name="register">Register</string>
     <string name="and_start_taking_notes">And start taking notes</string>
     <string name="first_name">First Name</string>
-    <string name="sex">   Sex</string>
     <string name="last_name">Last Name</string>
     <string name="email_address">Email Address</string>
     <string name="retype_password">Retype Password</string>
@@ -45,4 +44,9 @@
     <string name="yes">Yes</string>
     <string name="are_you_sure_you_want_to_log_out_from_the_application">Are you sure you want to log out from the application?</string>
     <string name="log_out">Log Out</string>
+
+    <!-- NEW -->
+    <string name="sex">Sex</string>
+    <string name="man">Man</string>
+    <string name="woman">Woman</string>
 </resources>
